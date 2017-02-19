@@ -4,6 +4,7 @@ Spring MVC based RESTful API application which serves information about possible
 and interconnected flights (maximum 1 stop) based on the data consumed from external APIs.
 
 * Demo is available here:
+
   `End-point return possible direct and interconnected flights from DUB to TSF in defined period of time`
  [https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00]
 
@@ -43,7 +44,7 @@ https://api.ryanair.com/timetable/3/schedules             https://api.ryanair.co
                                       |                           |
                      +----------------+------+          +---------+-------------+
                      |                       |          |                       |
-                     |  `ScheduleService`    |          |  JGraphRouteService   |
+                     |    ScheduleService    |          |  JGraphRouteService   |
                      |                       |          |                       |
                      +----------------+------+          +--------+--------------+
                                       ^                          ^
@@ -66,14 +67,14 @@ https://api.ryanair.com/timetable/3/schedules             https://api.ryanair.co
 Requirements:
 -------------
 
-* The application return a list of flights departing from a given departure airport not earlier
+1. The application return a list of flights departing from a given departure airport not earlier
   than the specified departure datetime and arriving to a given arrival airport not later than the
   specified arrival datetime.
-* The list should consist of:
+2. The list should consist of:
   ⋅⋅1. all direct flights if available (for example: `DUB - WRO`)
   ⋅⋅2. all interconnected flights with a maximum of one stop if available (for example: `DUB - STN - WRO`)
-* For interconnected flights the difference between the arrival and the next departure should be 2h or greater
-* The example response should be in following form:
+3. For interconnected flights the difference between the arrival and the next departure should be 2h or greater
+4. The example response should be in following form:
 
 ```
 [

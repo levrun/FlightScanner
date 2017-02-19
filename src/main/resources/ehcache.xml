@@ -1,0 +1,42 @@
+<ehcache>
+    <cache name="ALL_ROUTES"
+           maxElementsInMemory="1"
+           timeToLiveSeconds="7200"
+           eternal="false"
+           timeToIdleSeconds="86400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"
+           statistics="true">
+    </cache>
+    <cache name="SPECIFIC_ROUTES"
+           maxElementsInMemory="10000"
+           timeToLiveSeconds="7200"
+           eternal="false"
+           timeToIdleSeconds="86400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"
+           statistics="true">
+    </cache>
+    <cache name="FLIGHTS_SCAN"
+           maxElementsInMemory="10000"
+           timeToLiveSeconds="600"
+           eternal="false"
+           timeToIdleSeconds="86400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"
+           statistics="true">
+    </cache>
+    <cache name="FLIGHT_SCAN_SEARCH_RESULT"
+           maxElementsInMemory="10000"
+           timeToLiveSeconds="600"
+           eternal="false"
+           timeToIdleSeconds="86400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"
+           statistics="true">
+    </cache>
+</ehcache>

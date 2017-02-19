@@ -30,6 +30,8 @@ Libraries
 Design
 ------
 
+```text
+
                    +--------------------------+        +------------------------+
                    |                          |        |                        |
                    |  RyanairSchedulesClient  |        |  RyanairRoutesClient   |
@@ -57,6 +59,8 @@ https://api.ryanair.com/timetable/3/schedules             https://api.ryanair.co
                                      |                             |
                                      +-----------------------------+
     http://localhost:8080/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=...
+
+```
 
 Requirements:
 -------------

@@ -58,7 +58,7 @@ https://api.ryanair.com/timetable/3/schedules             https://api.ryanair.co
                                       ^                          ^
                                       |                          |
                                  +----+--------------------------+----+
-                                 |                                    |                                                        /DUB/WRO/years/2016/months/6):
+                                 |                                    |
                                  |   FlightScannerServiceWithTwoLegs  |
                                  |                                    |
                                  +-------------------^----------------+
@@ -75,16 +75,18 @@ https://api.ryanair.com/timetable/3/schedules             https://api.ryanair.co
 Requirements:
 -------------
 
-1. The application return a list of flights departing from a given departure airport not earlier
+* The application return a list of flights departing from a given departure airport not earlier
   than the specified departure datetime and arriving to a given arrival airport not later than the
   specified arrival datetime.
-2. The list should consist of:
+* The list should consist of:
 
-* all direct flights if available (for example: `DUB - WRO`)
-* all interconnected flights with a maximum of one stop if available (for example: `DUB - STN - WRO`)
+```
+1. all direct flights if available (for example: `DUB - WRO`)
+2. all interconnected flights with a maximum of one stop if available (for example: `DUB - STN - WRO`)
+```
 
-3. For interconnected flights the difference between the arrival and the next departure should be 2h or greater
-4. The example response should be in following form:
+* For interconnected flights the difference between the arrival and the next departure should be 2h or greater
+* The example response should be in following form:
 
 ```
 [

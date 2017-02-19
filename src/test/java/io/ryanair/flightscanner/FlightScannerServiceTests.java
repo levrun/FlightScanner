@@ -54,34 +54,34 @@ public class FlightScannerServiceTests {
         // Mockito.when(routesClient.getAllDirectRoutes()).thenReturn(fakeRoutes);
     }
 
-    @Test
-    public void testFlightScanService() {
-        // Given
-
-        // When
-        // List<FlightScanResult> results = flightScannerService.scanFlights()
-
-        // Then
-
-    }
-
-    @Test
-    public void testThatWeHaveOnly2PossibleRoutesOneDirectAndOneInterconnectedFromWROtoMAD() {
-        // When
-        List<List<Route>> routes = routeService.findAllPossibleRoutesBetweenAirports(from, to, 1);
-
-        // Then
-        Assert.assertThat(routes.size(), is(2));
-    }
-
-    @Test
-    public void testThatWeHaveZeroRoutesBetweenFFKAirportAndWroclaw() {
-        // When
-        List<List<Route>> routes = routeService.findAllPossibleRoutesBetweenAirports(ffk, to, 1);
-
-        // Then
-        Assert.assertThat(routes.size(), is(0));
-    }
+//    @Test
+//    public void testFlightScanService() {
+//        // Given
+//
+//        // When
+//        // List<FlightScanResult> results = flightScannerService.scanFlights()
+//
+//        // Then
+//
+//    }
+//
+//    @Test
+//    public void testThatWeHaveOnly2PossibleRoutesOneDirectAndOneInterconnectedFromWROtoMAD() {
+//        // When
+//        List<List<Route>> routes = routeService.findAllPossibleRoutesBetweenAirports(from, to, 1);
+//
+//        // Then
+//        Assert.assertThat(routes.size(), is(2));
+//    }
+//
+//    @Test
+//    public void testThatWeHaveZeroRoutesBetweenFFKAirportAndWroclaw() {
+//        // When
+//        List<List<Route>> routes = routeService.findAllPossibleRoutesBetweenAirports(ffk, to, 1);
+//
+//        // Then
+//        Assert.assertThat(routes.size(), is(0));
+//    }
 
 }
 

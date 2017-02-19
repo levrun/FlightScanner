@@ -6,11 +6,11 @@ and interconnected flights (maximum 1 stop) based on the data consumed from exte
 * Demo is available here:
 
   `End-point return possible direct and interconnected flights from DUB to TSF in defined period of time`
- [https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00]
+  https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00
 
 * You can also use Swagger-endpoint for convenience:
 
-  [https://ryanairflightsearch.herokuapp.com/flightscanner/swagger-ui.html]
+  https://ryanairflightsearch.herokuapp.com/flightscanner/swagger-ui.html
 
 How to run 
 ----------
@@ -21,12 +21,12 @@ How to run
 
 `http://localhost:8080/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00`
 
-    | param             |  value           |
-    | ----------------- |:----------------:|
-    | departure         |     DUB          |
-    | arrival           |     TSF          |
-    | departureDateTime | 2017-03-01T07:00 |
-    | arrivalDateTime   | 2017-03-03T21:00 |
+| param             |  value           |
+| ----------------- | ----------------:|
+| departure         |     DUB          |
+| arrival           |     TSF          |
+| departureDateTime | 2017-03-01T07:00 |
+| arrivalDateTime   | 2017-03-03T21:00 |
 
 Libraries
 ---------
@@ -79,8 +79,10 @@ Requirements:
   than the specified departure datetime and arriving to a given arrival airport not later than the
   specified arrival datetime.
 2. The list should consist of:
-⋅⋅* all direct flights if available (for example: `DUB - WRO`)
-⋅⋅* all interconnected flights with a maximum of one stop if available (for example: `DUB - STN - WRO`)
+
+* all direct flights if available (for example: `DUB - WRO`)
+* all interconnected flights with a maximum of one stop if available (for example: `DUB - STN - WRO`)
+
 3. For interconnected flights the difference between the arrival and the next departure should be 2h or greater
 4. The example response should be in following form:
 

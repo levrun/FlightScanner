@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -73,6 +74,8 @@ public class FlightScannerServiceTests {
     @Test
     public void testFlightScanService() {
         // Given
+        ReflectionTestUtils.setField(FlightScannerServiceWithTwoLegs.class, "timeForChangePlane", 119);
+
         Airport wroAirport = new Airport("WRO");
         Airport madAirport = new Airport("MAD");
         Airport stnAirport = new Airport("STN");

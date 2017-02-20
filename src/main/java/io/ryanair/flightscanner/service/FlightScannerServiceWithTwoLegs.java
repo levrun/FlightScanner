@@ -26,7 +26,7 @@ public class FlightScannerServiceWithTwoLegs implements FlightScannerService {
     private static final Comparator<FlightLeg> ARRIVAL_DATE_TIME_COMPARATOR = Comparator.comparing(FlightLeg::getArrivalDateTime);
 
     @Value("${time.for.change.plane.in.minutes}")
-    private int timeForChangePlane;
+    private static int timeForChangePlane;
 
     @Autowired
     private RouteService routeService;

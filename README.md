@@ -1,5 +1,7 @@
 # Ryanair interconnected flights scanner
 
+[![Build Status](https://semaphoreci.com/api/v1/levrun/flightscanner/branches/master/badge.svg)](https://semaphoreci.com/levrun/flightscanner)
+
 Spring MVC based RESTful API application which serves information about possible direct
 and interconnected flights (maximum 1 stop) based on the data consumed from external APIs.
 

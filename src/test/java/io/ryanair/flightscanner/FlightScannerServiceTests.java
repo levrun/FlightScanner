@@ -54,16 +54,18 @@ public class FlightScannerServiceTests {
         // Mockito.when(routesClient.getAllDirectRoutes()).thenReturn(fakeRoutes);
     }
 
-//    @Test
-//    public void testFlightScanService() {
-//        // Given
-//
-//        // When
-//        // List<FlightScanResult> results = flightScannerService.scanFlights()
-//
-//        // Then
-//
-//    }
+    @Test
+    public void testFlightScanService() {
+        // Given
+
+        // When
+        // List<FlightScanResult> results = flightScannerService.scanFlights()
+
+        // Then
+        Assert.assertThat(true, is(true));
+
+
+    }
 //
 //    @Test
 //    public void testThatWeHaveOnly2PossibleRoutesOneDirectAndOneInterconnectedFromWROtoMAD() {

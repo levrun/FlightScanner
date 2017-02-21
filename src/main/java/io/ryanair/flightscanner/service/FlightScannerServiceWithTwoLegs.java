@@ -7,6 +7,7 @@ import io.ryanair.flightscanner.model.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 import static io.ryanair.flightscanner.common.CacheConfigurationConstants.FLIGHTS_SCAN;
 
 @Service
+@Primary
 public class FlightScannerServiceWithTwoLegs implements FlightScannerService {
 
     private static final int DIRECT_FLIGHT_ONE_LEG = 1;
@@ -42,7 +44,7 @@ public class FlightScannerServiceWithTwoLegs implements FlightScannerService {
                                               LocalDateTime toDateTime,
                                               int maxConnections) {
 
-        List<List<Route>> routes = routeService.findAllPossibleRoutesBetweenAirports(from, to, INTERCONNECTED_FLIGHT_TWO_LEGS);
+        List<List<Route>> routes = routeService.findAllPossibleRoutesBetweenAirports(from, to, maxConnections);
         List<FlightScanResult> directFlights = searchDirectFlights(routes, fromDateTime, toDateTime);
         List<FlightScanResult> interconnectedFlights = searchInterconnectedFlights(routes, fromDateTime, toDateTime);
         List<FlightScanResult> result = new ArrayList<>();
@@ -85,7 +87,7 @@ public class FlightScannerServiceWithTwoLegs implements FlightScannerService {
                             .plusMinutes(timeForChangePlane);
 
                     List<FlightLeg> secondLegSchedule = scheduleService.getFlightSchedule(secondLeg.getFrom(), secondLeg.getTo(), departureDateTimeForNextFlight, toDateTime);
-                    return toFlightSearchData(firstLegSchedule, secondLegSchedule);
+                    return toFlightScanResult(firstLegSchedule, secondLegSchedule);
                 }).collect(Collectors.toList());
     }
 
@@ -97,7 +99,7 @@ public class FlightScannerServiceWithTwoLegs implements FlightScannerService {
         return connections.stream().filter(route -> route.size() == INTERCONNECTED_FLIGHT_TWO_LEGS).collect(Collectors.toList());
     }
 
-    private Stream<FlightScanResult> toFlightSearchData(List<FlightLeg> firstLegSchedule, List<FlightLeg> secondLegSchedule) {
+    private Stream<FlightScanResult> toFlightScanResult(List<FlightLeg> firstLegSchedule, List<FlightLeg> secondLegSchedule) {
         firstLegSchedule.sort(ARRIVAL_DATE_TIME_COMPARATOR);
         secondLegSchedule.sort(ARRIVAL_DATE_TIME_COMPARATOR);
 

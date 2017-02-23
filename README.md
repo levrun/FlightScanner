@@ -61,12 +61,12 @@ https://api.ryanair.com/timetable/3/schedules             https://api.ryanair.co
                      +----------------+------+          +--------+--------------+
                                       ^                          ^
                                       |                          |
-                                 +----+--------------------------+----+
-                                 |                                    |
-                                 |   FlightScannerServiceWithTwoLegs  |
-                                 |                                    |
-                                 +-------------------^----------------+
-                                                     |
+                                 +----+--------------------------+----+ 
+                                 |                                    |-----+ 
+                                 |   FlightScannerServiceWithTwoLegs  |     |
+                                 |                                    |     |  <--- FlightScannerServiceWithNLegs IN DEV
+                                 +-------------------^----------------+     |
+                                                     | ---------------------+       
                                      +---------------+-------------+
                                      |                             |
                                      |   FlightScannerController   |

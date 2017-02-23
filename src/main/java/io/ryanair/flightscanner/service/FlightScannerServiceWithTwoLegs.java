@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 import static io.ryanair.flightscanner.common.CacheConfigurationConstants.FLIGHTS_SCAN;
 
 @Service
-@Primary
 public class FlightScannerServiceWithTwoLegs implements FlightScannerService {
 
     private static final int DIRECT_FLIGHT_ONE_LEG = 1;

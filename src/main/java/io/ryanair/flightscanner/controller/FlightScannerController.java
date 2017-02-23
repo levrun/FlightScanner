@@ -16,8 +16,8 @@ import java.util.List;
 @RestController
 public class FlightScannerController {
 
-    @Value("${max.connections}")
-    private int maxConnections;
+//    @Value("${max.connections}")
+//    private int maxConnections;
 
     @Autowired
     private FlightScannerService flightScannerService;
@@ -26,7 +26,8 @@ public class FlightScannerController {
     public List<FlightScanResult> scanFlights(@RequestParam String departure,
                                               @RequestParam String arrival,
                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime departureDateTime,
-                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime arrivalDateTime) {
+                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime arrivalDateTime,
+                                              @RequestParam Integer maxConnections) {
 
         Airport from = new Airport(departure);
         Airport to = new Airport(arrival);

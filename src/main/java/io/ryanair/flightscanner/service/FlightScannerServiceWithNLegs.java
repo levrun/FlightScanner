@@ -7,16 +7,17 @@ import io.ryanair.flightscanner.model.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static io.ryanair.flightscanner.common.CacheConfigurationConstants.FLIGHTS_SCAN;
 
 @Service
+@Primary
 public class FlightScannerServiceWithNLegs implements FlightScannerService {
 
     private static final int DIRECT_FLIGHT_ONE_LEG = 1;
@@ -74,24 +75,12 @@ public class FlightScannerServiceWithNLegs implements FlightScannerService {
                                                                LocalDateTime toDateTime,
                                                                int maxConnections) {
         List<List<Route>> interconnectedRoutes = filterFlightsWithEqualOrMoreThan2Legs(routes);
-        return interconnectedRoutes.parallelStream()
-                .flatMap(interconnectedRoute -> {
-//                    Route firstLeg = interconnectedRoute.get(0);
-//                    Route secondLeg = interconnectedRoute.get(1);
-//
-//                    List<FlightLeg> firstLegSchedule = scheduleService.getFlightSchedule(firstLeg.getFrom(), firstLeg.getTo(), fromDateTime, toDateTime);
-//
-//                    LocalDateTime departureDateTimeForNextFlight = firstLegSchedule.stream()
-//                            .findFirst()
-//                            .map(FlightLeg::getArrivalDateTime)
-//                            .orElse(fromDateTime)
-//                            .plusMinutes(timeForChangePlane);
-//
-//                    List<FlightLeg> secondLegSchedule = scheduleService.getFlightSchedule(secondLeg.getFrom(), secondLeg.getTo(), departureDateTimeForNextFlight, toDateTime);
 
-                    List<List<FlightLeg>> listOfListOfLegSchedules = new ArrayList<>();
+        List<FlightScanResult> listOfScanResult = new ArrayList<>();
+        for(List<Route> routeList: interconnectedRoutes) {
+            List<List<FlightLeg>> listOfListOfLegSchedules = new ArrayList<>();
                     LocalDateTime departureDateTimeForNextFlight = fromDateTime;
-                    for(Route route : interconnectedRoute) {
+                    for(Route route : routeList) {
                         List<FlightLeg> legSchedule = scheduleService.getFlightSchedule(route.getFrom(), route.getTo(), departureDateTimeForNextFlight, toDateTime);
                         listOfListOfLegSchedules.add(legSchedule);
                         departureDateTimeForNextFlight = legSchedule.stream()
@@ -100,10 +89,11 @@ public class FlightScannerServiceWithNLegs implements FlightScannerService {
                             .orElse(fromDateTime)
                             .plusMinutes(timeForChangePlane);
                     }
+                    List<FlightScanResult> result = toFlightScanResult(listOfListOfLegSchedules, maxConnections);
+                    listOfScanResult.addAll(result);
+        }
 
-                    return toFlightScanResult(listOfListOfLegSchedules, maxConnections);
-                    // return toFlightScanResult(firstLegSchedule, secondLegSchedule, maxConnections);
-                }).collect(Collectors.toList());
+        return listOfScanResult;
     }
 
     private List<Route> filterOnlyDirectFlights(List<List<Route>> routes) {
@@ -114,35 +104,45 @@ public class FlightScannerServiceWithNLegs implements FlightScannerService {
         return connections.stream().filter(route -> route.size() >= INTERCONNECTED_FLIGHT_TWO_LEGS).collect(Collectors.toList());
     }
 
-//    private Stream<FlightScanResult> toFlightScanResult(List<FlightLeg> firstLegSchedule,
-//                                                        List<FlightLeg> secondLegSchedule,
-//                                                        int maxConnections) {
-//        firstLegSchedule.sort(ARRIVAL_DATE_TIME_COMPARATOR);
-//        secondLegSchedule.sort(ARRIVAL_DATE_TIME_COMPARATOR);
-//
-//        return firstLegSchedule.stream()
-//                .flatMap(firstLeg -> secondLegSchedule.stream()
-//                        .filter(secondLeg -> secondLeg.getDepartureDateTime().isAfter(firstLeg.getArrivalDateTime().plusMinutes(timeForChangePlane)))
-//                        .map(secondLeg -> new FlightScanResult(maxConnections - 1, Arrays.asList(
-//                                new FlightLeg(firstLeg.getDepartureAirport(), firstLeg.getArrivalAirport(), firstLeg.getDepartureDateTime(), firstLeg.getArrivalDateTime()),
-//                                new FlightLeg(secondLeg.getDepartureAirport(), secondLeg.getArrivalAirport(), secondLeg.getDepartureDateTime(), secondLeg.getArrivalDateTime())
-//                        )))
-//                );
-//    }
+    private List<FlightScanResult> toFlightScanResult(List<List<FlightLeg>> listOfListLegSchedule, int maxConnections) {
+        List<FlightScanResult> listOfFlightScanResults = new ArrayList<>();
+        int depth = 1;
+        List<FlightLeg> firstLevelSchedules = listOfListLegSchedule.get(0);
+        for(FlightLeg schedule: firstLevelSchedules) {
+            List<FlightLeg> listOfOneRoute = new ArrayList<>();
+            listOfOneRoute.add(schedule);
+            calculatePath(depth, listOfOneRoute, listOfFlightScanResults, listOfListLegSchedule);
+        }
 
-    private Stream<FlightScanResult> toFlightScanResult(List<List<FlightLeg>> listOfListLegSchedule, int maxConnections) {
-//        firstLegSchedule.sort(ARRIVAL_DATE_TIME_COMPARATOR);
-//        secondLegSchedule.sort(ARRIVAL_DATE_TIME_COMPARATOR);
-//
-//        return firstLegSchedule.stream()
-//                .flatMap(firstLeg -> secondLegSchedule.stream()
-//                        .filter(secondLeg -> secondLeg.getDepartureDateTime().isAfter(firstLeg.getArrivalDateTime().plusMinutes(timeForChangePlane)))
-//                        .map(secondLeg -> new FlightScanResult(maxConnections - 1, Arrays.asList(
-//                                new FlightLeg(firstLeg.getDepartureAirport(), firstLeg.getArrivalAirport(), firstLeg.getDepartureDateTime(), firstLeg.getArrivalDateTime()),
-//                                new FlightLeg(secondLeg.getDepartureAirport(), secondLeg.getArrivalAirport(), secondLeg.getDepartureDateTime(), secondLeg.getArrivalDateTime())
-//                        )))
-//                );
-        return null;
+        return listOfFlightScanResults;
+    }
+
+    private void calculatePath(int depth,
+                               List<FlightLeg> listOfOneRoute,
+                               List<FlightScanResult> listOfFlightScanResults,
+                               List<List<FlightLeg>> listOfListLegSchedule) {
+
+        List<FlightLeg> NLevelSchedules = listOfListLegSchedule.get(depth);
+
+        for(FlightLeg schedule: NLevelSchedules) {
+            FlightLeg lastFlightInRoute = listOfOneRoute.get(listOfOneRoute.size() - 1);
+            LocalDateTime lastFlightInRouteArrivalDateTime = lastFlightInRoute.getArrivalDateTime();
+            LocalDateTime lastFlightInRouteArrivalDateTimePlusTwoHours = lastFlightInRouteArrivalDateTime.plusHours(2);
+            LocalDateTime scheduleDepartureDateTime = schedule.getDepartureDateTime();
+            boolean scheduleIsOk = scheduleDepartureDateTime.equals(lastFlightInRouteArrivalDateTimePlusTwoHours) || scheduleDepartureDateTime.isAfter(lastFlightInRouteArrivalDateTimePlusTwoHours);
+
+            if(scheduleIsOk) {
+                listOfOneRoute.add(schedule);
+                if(depth == listOfListLegSchedule.size() - 1) {
+                    FlightScanResult result = new FlightScanResult(depth, listOfOneRoute);
+                    listOfFlightScanResults.add(result);
+                } else {
+                    depth++;
+                    calculatePath(depth, listOfOneRoute, listOfFlightScanResults, listOfListLegSchedule);
+                }
+
+            }
+        }
     }
 
 }

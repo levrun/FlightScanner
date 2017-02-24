@@ -217,7 +217,7 @@ public class FlightScannerServiceTests {
                 3);
 
         // Then
-        Assert.assertThat(results.size(), is(5));
+        Assert.assertThat(results.size(), is(6));
 
 
     }

@@ -3,12 +3,19 @@
 [![Build Status](https://semaphoreci.com/api/v1/levrun/flightscanner/branches/master/badge.svg)](https://semaphoreci.com/levrun/flightscanner)
 
 Spring MVC based RESTful API application which serves information about possible direct
-and interconnected flights (maximum 1 stop) based on the data consumed from external APIs.
+and interconnected flights (maximum N stop/connection) based on the data consumed from external APIs.
+
+> Please be aware that N > 3 could possible be too long to wait
 
 * Demo is available here:
 
   `End-point return possible direct and interconnected flights from DUB to TSF in defined period of time`
-  https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00
+  https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00&maxConnections=1
+  
+  or
+  
+ https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00&maxConnections=2 
+  
 
 * You can also use Swagger-endpoint for convenience:
 
@@ -21,7 +28,7 @@ How to run
 * Just run _Application.java_ and Spring Boot will start embedded tomcat server.
 * Open in browser following URL to get info about possible flights between Dublin and Treviso for certain period:
 
-`http://localhost:8080/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00`
+`http://localhost:8080/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00&maxConnections=1`
 
 | param             |  value           |
 | ----------------- | ----------------:|
@@ -59,12 +66,12 @@ https://api.ryanair.com/timetable/3/schedules             https://api.ryanair.co
                      +----------------+------+          +--------+--------------+
                                       ^                          ^
                                       |                          |
-                                 +----+--------------------------+----+
-                                 |                                    |
-                                 |   FlightScannerServiceWithTwoLegs  |
-                                 |                                    |
-                                 +-------------------^----------------+
-                                                     |
+                                 +----+--------------------------+----+ 
+                                 |                                    |-----+ 
+                                 |   FlightScannerServiceWithTwoLegs  |     |
+                                 |                                    |     |  <--- FlightScannerServiceWithNLegs IN DEV
+                                 +-------------------^----------------+     |
+                                                     | ---------------------+       
                                      +---------------+-------------+
                                      |                             |
                                      |   FlightScannerController   |
@@ -84,7 +91,7 @@ Requirements:
 
 ```
 1. all direct flights if available (for example: `DUB - WRO`)
-2. all interconnected flights with a maximum of one stop if available (for example: `DUB - STN - WRO`)
+2. all interconnected flights with a maximum of N stops if available (for example: `DUB - STN - WRO`)
 ```
 
 * For interconnected flights the difference between the arrival and the next departure should be 2h or greater

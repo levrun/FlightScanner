@@ -77,11 +77,18 @@ public class FlightScannerServiceWithNLegs implements FlightScannerService {
         List<List<Route>> interconnectedRoutes = filterFlightsWithEqualOrMoreThan2Legs(routes);
 
         List<FlightScanResult> listOfScanResult = new ArrayList<>();
+
         for(List<Route> routeList: interconnectedRoutes) {
             List<List<FlightLeg>> listOfListOfLegSchedules = new ArrayList<>();
                     LocalDateTime departureDateTimeForNextFlight = fromDateTime;
                     for(Route route : routeList) {
                         List<FlightLeg> legSchedule = scheduleService.getFlightSchedule(route.getFrom(), route.getTo(), departureDateTimeForNextFlight, toDateTime);
+                        if(legSchedule.isEmpty()) {
+                            // it means we don't have proper schedules on one of the leg
+                            // that's why the whole route is impossible
+                            listOfListOfLegSchedules = null;
+                            break;
+                        }
                         listOfListOfLegSchedules.add(legSchedule);
                         departureDateTimeForNextFlight = legSchedule.stream()
                             .findFirst()
@@ -89,8 +96,10 @@ public class FlightScannerServiceWithNLegs implements FlightScannerService {
                             .orElse(fromDateTime)
                             .plusMinutes(timeForChangePlane);
                     }
-                    List<FlightScanResult> result = toFlightScanResult(listOfListOfLegSchedules, maxConnections);
-                    listOfScanResult.addAll(result);
+                    if(listOfListOfLegSchedules != null) {
+                        List<FlightScanResult> result = toFlightScanResult(listOfListOfLegSchedules, maxConnections);
+                        listOfScanResult.addAll(result);
+                    }
         }
 
         return listOfScanResult;
@@ -134,12 +143,16 @@ public class FlightScannerServiceWithNLegs implements FlightScannerService {
             if(scheduleIsOk) {
                 listOfOneRoute.add(schedule);
                 if(depth == listOfListLegSchedule.size() - 1) {
-                    FlightScanResult result = new FlightScanResult(depth, listOfOneRoute);
+                    List<FlightLeg> copyOfOneRoute = new ArrayList<>();
+                    copyOfOneRoute.addAll(listOfOneRoute);
+                    FlightScanResult result = new FlightScanResult(depth, copyOfOneRoute);
                     listOfFlightScanResults.add(result);
                 } else {
                     depth++;
                     calculatePath(depth, listOfOneRoute, listOfFlightScanResults, listOfListLegSchedule);
+                    depth--;
                 }
+                listOfOneRoute.remove(depth);
 
             }
         }

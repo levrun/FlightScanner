@@ -78,10 +78,11 @@ public class FlightScannerServiceWithNLegs implements FlightScannerService {
 
         List<FlightScanResult> listOfScanResult = new ArrayList<>();
 
-        for(List<Route> routeList: interconnectedRoutes) {
-            List<List<FlightLeg>> listOfListOfLegSchedules = new ArrayList<>();
+        interconnectedRoutes.parallelStream().forEach(
+                listOfRoutes -> {
+                    List<List<FlightLeg>> listOfListOfLegSchedules = new ArrayList<>();
                     LocalDateTime departureDateTimeForNextFlight = fromDateTime;
-                    for(Route route : routeList) {
+                    for(Route route : listOfRoutes) {
                         List<FlightLeg> legSchedule = scheduleService.getFlightSchedule(route.getFrom(), route.getTo(), departureDateTimeForNextFlight, toDateTime);
                         if(legSchedule.isEmpty()) {
                             // it means we don't have proper schedules on one of the leg
@@ -91,16 +92,17 @@ public class FlightScannerServiceWithNLegs implements FlightScannerService {
                         }
                         listOfListOfLegSchedules.add(legSchedule);
                         departureDateTimeForNextFlight = legSchedule.stream()
-                            .findFirst()
-                            .map(FlightLeg::getArrivalDateTime)
-                            .orElse(fromDateTime)
-                            .plusMinutes(timeForChangePlane);
+                                .findFirst()
+                                .map(FlightLeg::getArrivalDateTime)
+                                .orElse(fromDateTime)
+                                .plusMinutes(timeForChangePlane);
                     }
                     if(listOfListOfLegSchedules != null) {
                         List<FlightScanResult> result = toFlightScanResult(listOfListOfLegSchedules, maxConnections);
                         listOfScanResult.addAll(result);
                     }
-        }
+                }
+        );
 
         return listOfScanResult;
     }

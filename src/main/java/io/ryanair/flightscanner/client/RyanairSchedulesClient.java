@@ -33,6 +33,7 @@ public class RyanairSchedulesClient implements SchedulesClient {
     @Override
     @Cacheable(SCHEDULES)
     public Optional<MonthlySchedule> getSchedules(Airport from, Airport to, YearMonth yearMonth) {
+        logger.info("Get schedules From: " + from.toString() + " To: " + to.toString() + yearMonth.toString());
         String schedulesApiUrl = String.format(ryanairApiHostUrl + ryanairApiSchedulesContext,
                 from.getName(),
                 to.getName(),
@@ -47,7 +48,7 @@ public class RyanairSchedulesClient implements SchedulesClient {
             // https://api.ryanair.com/timetable/3/schedules/TSF/WRO/years/2017/months/3
             // you will get:
             // {"code":"Error","message":"Resource not found"}
-            logger.warn("Ryanair end-point responded with exception", exception);
+            logger.warn("Ryanair end-point responded with exception");
         }
 
         return Optional.ofNullable(result);

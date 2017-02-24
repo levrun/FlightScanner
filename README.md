@@ -5,16 +5,16 @@
 Spring MVC based RESTful API application which serves information about possible direct
 and interconnected flights (maximum N stop/connection) based on the data consumed from external APIs.
 
-> Please be aware that N > 3 could possible be too long to wait
+> Please be aware that N > 1 could possible be too long to wait
 
 * Demo is available here:
 
   `End-point return possible direct and interconnected flights from DUB to TSF in defined period of time`
-  https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00&maxConnections=1
+  https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-02T07:00&arrivalDateTime=2017-03-02T21:00&maxConnections=1
   
   or
   
- https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00&maxConnections=2 
+ https://ryanairflightsearch.herokuapp.com/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-02T07:00&arrivalDateTime=2017-03-02T21:00&maxConnections=2
   
 
 * You can also use Swagger-endpoint for convenience:
@@ -28,7 +28,7 @@ How to run
 * Just run _Application.java_ and Spring Boot will start embedded tomcat server.
 * Open in browser following URL to get info about possible flights between Dublin and Treviso for certain period:
 
-`http://localhost:8080/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-01T07:00&arrivalDateTime=2017-03-03T21:00&maxConnections=1`
+`http://localhost:8080/flightscanner/interconnections?departure=DUB&arrival=TSF&departureDateTime=2017-03-02T07:00&arrivalDateTime=2017-03-02T21:00&maxConnections=1`
 
 | param             |  value           |
 | ----------------- | ----------------:|
